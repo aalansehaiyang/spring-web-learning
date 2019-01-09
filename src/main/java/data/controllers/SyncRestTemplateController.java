@@ -26,19 +26,23 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @author onlyone
+ * <pre>
+ *  同步调用
+ *
+ *  &#64;author onlyone
+ * </pre>
  */
 @RestController
-@RequestMapping("/api")
-public class RestTemplateController {
+@RequestMapping("/api/sync")
+public class SyncRestTemplateController {
 
-    private final Logger logger = LoggerFactory.getLogger(RestTemplateController.class);
+    private final Logger logger = LoggerFactory.getLogger(SyncRestTemplateController.class);
 
     /**
      * <pre>
      *    采用 SimpleClientHttpRequestFactory
      *    
-     *    http://localhost:8091/api/query_with_timeout_simpleclient
+     *    http://localhost:8091/api/sync/query_with_timeout_simpleclient
      * </pre>
      */
     @RequestMapping(value = "/query_with_timeout_simpleclient")
@@ -81,14 +85,14 @@ public class RestTemplateController {
      * <pre>
      *    采用 HttpComponentsClientHttpRequestFactory
      *
-     *    http://localhost:8091/api/query_with_timeout_httpcomponent
+     *    http://localhost:8091/api/sync/query_with_timeout_httpcomponent
      * </pre>
      */
     @RequestMapping(value = "/query_with_timeout_httpcomponent")
     public String queryWithTimeoutHttpcomponent(HttpServletRequest request, HttpServletResponse response) {
         String url = null;
-         url = "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15564592781";
-//        url = "http://www.google.com/";
+        url = "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15564592781";
+        // url = "http://www.google.com/";
 
         HttpClientBuilder httpClientBuilder = HttpClients.custom();
 
