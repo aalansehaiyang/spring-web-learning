@@ -1,10 +1,10 @@
-### RestTemplate
+## Spring框架封装httpclient
 ---
 
 **远程服务时就必须使用HTTP客户端。我们可以使用JDK原生的URLConnection、Apache的Http Client、Netty的异步HTTP Client, Spring的RestTemplate。这里介绍的是RestTemplate。**
 
 
-#### RestTemplate
+###  一、同步 RestTemplate
 
 简单介绍了 getForEntity()、getForObject()、postForEntity()、postForObject() 等几大类重载方法的使用说明。
 
@@ -27,3 +27,13 @@ RestTemplate默认使用SimpleClientHttpRequestFactory，内部是调用jdk的Ht
 
 
 ```
+
+代码示例：data.controllers.SyncRestTemplateController
+
+###  二、异步 AsyncRestTemplate
+
+* 设置timeout时间
+* 设置连接数
+* 可以添加自定义拦截器
+
+代码示例：data.controllers.AsyncRestTemplateController

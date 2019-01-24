@@ -17,7 +17,6 @@ public class WebStart extends WebMvcConfigurerAdapter {
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(WebStart.class, "classpath*:/spring/*.xml");
-        app.setShowBanner(false);
         app.run(args);
     }
 

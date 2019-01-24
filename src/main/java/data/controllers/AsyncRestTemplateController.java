@@ -35,7 +35,6 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.AsyncRestTemplate;
-import org.springframework.web.client.RestClientException;
 
 /**
  * <pre>
@@ -65,34 +64,23 @@ public class AsyncRestTemplateController {
                                                                               NoSuchAlgorithmException,
                                                                               KeyManagementException {
         String url = null;
-        // url = "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15564592781";
+        url = "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15564592781";
         // url = "http://www.google.com/";
-        url = "https://www.facebook.cn/";
+        // url = "https://www.facebook.cn/";
 
-        TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
-
-            @Override
-            public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                return true;
-            }
-        };
-
-        SSLContext sslcontext = SSLContextBuilder.create().loadTrustMaterial(null, acceptingTrustStrategy).build();
-        Registry<SchemeIOSessionStrategy> sessionStrategyRegistry = RegistryBuilder.<SchemeIOSessionStrategy> create().register("http",
-                                                                                                                                NoopIOSessionStrategy.INSTANCE).register("https",
-                                                                                                                                                                         new SSLIOSessionStrategy(sslcontext,
-                                                                                                                                                                                                  SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)).build();
-        PoolingNHttpClientConnectionManager connectionManager = new PoolingNHttpClientConnectionManager(new DefaultConnectingIOReactor(IOReactorConfig.DEFAULT),
-                                                                                                        sessionStrategyRegistry);
+        PoolingNHttpClientConnectionManager connectionManager = new PoolingNHttpClientConnectionManager(new DefaultConnectingIOReactor(IOReactorConfig.DEFAULT));
         connectionManager.setMaxTotal(100);
         connectionManager.setDefaultMaxPerRoute(20);
-        RequestConfig config = RequestConfig.custom().setConnectTimeout(8000).setSocketTimeout(8000).setConnectionRequestTimeout(8000).build();
+        RequestConfig config = RequestConfig.custom().setConnectTimeout(3000).setSocketTimeout(3000).setConnectionRequestTimeout(3000).build();
 
         CloseableHttpAsyncClient asyncClient = HttpAsyncClientBuilder.create().setConnectionManager(connectionManager).setDefaultRequestConfig(config).build();
 
         HttpComponentsAsyncClientHttpRequestFactory asyncHttpRequestFactory = new HttpComponentsAsyncClientHttpRequestFactory(asyncClient);
 
         AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate(asyncHttpRequestFactory);
+
+        // 拦截器设置
+        // asyncRestTemplate.getInterceptors().add(new LogClientHttpRequestInterceptor());
 
         Long startTime = System.currentTimeMillis();
         Long endTime = 0L;
@@ -101,14 +89,15 @@ public class AsyncRestTemplateController {
         String result = "";
         try {
             // 调用完后立即返回（没有阻塞）
-            resultFuture = asyncRestTemplate.getForEntity(url, null, String.class);
+            resultFuture = asyncRestTemplate.getForEntity(url, String.class);
             endTime = System.currentTimeMillis();
             // 异步调用后的回调函数
             resultFuture.addCallback(new ListenableFutureCallback<ResponseEntity<String>>() {
 
                 @Override
                 public void onFailure(Throwable ex) {
-                    System.out.println("asyncRestTemplate call onFailure!");
+                    System.out.println("asyncRestTemplate call onFailure! 耗时="
+                                       + (System.currentTimeMillis() - startTime));
                     ex.printStackTrace();
                 }
 
@@ -117,7 +106,7 @@ public class AsyncRestTemplateController {
                     System.out.println("asyncRestTemplate call onSuccess! result=" + result.getBody());
                 }
             });
-            result = resultFuture.get(3, TimeUnit.SECONDS).getBody();
+            // result = resultFuture.get(3, TimeUnit.SECONDS).getBody();
         } catch (Exception e) {
             success = "调用失败";
             e.printStackTrace();
