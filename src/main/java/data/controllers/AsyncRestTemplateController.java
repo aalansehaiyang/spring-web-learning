@@ -71,8 +71,8 @@ public class AsyncRestTemplateController {
         PoolingNHttpClientConnectionManager connectionManager = new PoolingNHttpClientConnectionManager(new DefaultConnectingIOReactor(IOReactorConfig.DEFAULT));
         connectionManager.setMaxTotal(100);
         connectionManager.setDefaultMaxPerRoute(20);
+        // 设置超时时间
         RequestConfig config = RequestConfig.custom().setConnectTimeout(3000).setSocketTimeout(3000).setConnectionRequestTimeout(3000).build();
-
         CloseableHttpAsyncClient asyncClient = HttpAsyncClientBuilder.create().setConnectionManager(connectionManager).setDefaultRequestConfig(config).build();
 
         HttpComponentsAsyncClientHttpRequestFactory asyncHttpRequestFactory = new HttpComponentsAsyncClientHttpRequestFactory(asyncClient);
