@@ -30,6 +30,11 @@ RestTemplate默认使用SimpleClientHttpRequestFactory，内部是调用jdk的Ht
 
 代码示例：data.controllers.SyncRestTemplateController
 
+#### 网上资料：
+
+* [Spring Cloud Alibaba基础教程：几种服务消费方式（RestTemplate、WebClient、Feign）
+](https://mp.weixin.qq.com/s/udVIPbkuoHRyGbIgZDtrpg)
+
 ###  二、异步 AsyncRestTemplate
 
 * 设置timeout时间
